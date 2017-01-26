@@ -1,0 +1,8 @@
+resource FileHandle
+    @description provides operations on an attached filesystem resource
+
+    close()
+    peek()
+    read()
+    seek()
+    write()

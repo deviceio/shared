@@ -1,0 +1,9 @@
+enum core.TextEncoding Int32
+    @description: provides a list of availble text encodings
+
+    Base32 = 0
+    Base64 = 1
+    Hex = 10
+    BinaryBE = 20
+    BinaryLE = 21
+    Ascii85 = 30

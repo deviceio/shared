@@ -1,0 +1,20 @@
+model core.FileInfo
+    @description: provides information about a file path
+
+    path -> StringUFF8
+        @description: the path to the file described by this model, including name.
+
+    parent -> StringUTF8
+        @description: the path of the file's parent directory
+
+    name -> StringUTF8
+        @description: indicates the name of the file with the parent path omitted
+
+    size -> Int32
+        @description: the size of the file in bytes 
+    
+    isDir -> Bool
+        @description: indicates if this file is a directory
+
+    ext -> StringUTF8
+        @description: indicates the file extention, if present in the file name

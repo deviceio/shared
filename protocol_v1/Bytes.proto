@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package protocol.v1;
+
+message Bytes {
+    bytes Value = 1;
+}

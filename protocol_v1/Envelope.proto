@@ -1,0 +1,39 @@
+syntax = "proto3";
+package protocol.v1;
+
+message Envelope {
+    enum MessageType {    
+        Bool = 0;
+        Bytes = 1;            
+        CallMember = 2;    
+        Close = 3;   
+        CreateObject = 4;        
+        DateTimeISO8601 = 5;
+        DeleteObject = 6;    
+        DescribeObject = 7;
+        Error= 8;
+        Float32 = 9;
+        Float64 = 10;
+        GetMember = 11;
+        Handshake = 12;
+        Int32 = 13;
+        Int64 = 14;
+        Keepalive = 15;
+        SetMember = 16;
+        StringASCII = 17;        
+        StringUTF16 = 18;
+        StringUTF16BE = 19;
+        StringUTF16LE = 20;
+        StringUTF32 = 21;
+        StringUTF32BE = 22;
+        StringUTF32LE = 23; 
+        StringUTF8 = 24;
+        UInt32 = 25;
+        UInt64 = 26;
+        Void = 27;
+    }
+
+    MessageType Type = 1;
+    string Context = 2;
+    bytes Data = 3;
+}

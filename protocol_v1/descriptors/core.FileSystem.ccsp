@@ -1,0 +1,178 @@
+resource core.FileSystem
+    @description core.FileSystem provides access to common filesystem actions            
+    @static
+
+    delete(path StringUTF8) -> Void
+        @description: deletes the file specified by path. path can be a file or
+        directory. If path is a directory the entire directory will be deleted.
+        if you are unsure of the path type, use core.FileSystem.info first.
+        @param path: the local filesystem path to the file        
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+
+    encode(path StringUTF8, encoding core.TextEncoding) -> StringUTF8
+        @description: returns the content of a file by path encoded according to 
+        the supplied encoding argument. This is useful to offload the encoding cost
+        to the downstream device.
+        @param path: The path to the file
+        @param encoding: The encoding to return the data as
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+        @error 4: encoding argument must be supplied
+        @error 5: encoding argument must be a valid enum value (Int32)
+        @error 6: supplied encoding is unsupported on this platform            
+
+    hash(path StringUTF8, hash core.HashFunc) -> StringUTF8
+        @description: returns a hash for the file content identified by path and
+        desired hash function. This is useful to offload the hasing cost
+        to the downstream device.
+        @param path: The path to the file to conduct a content hash on
+        @param hash: the hash function to use
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+        @error 4: hash argument must be supplied
+        @error 5: hash argument must be a valid enum value (Int32)
+        @error 6: supplied hash is unsupported on this platform    
+
+    info(path StringUTF8) -> core.FileInfo
+        @description: returns info about a filesystem path
+        @param path: the local filesystem path to get info on
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+
+    mkdir(path StringUTF8) -> Void
+        @description: makes the specified directory by path. This method will create
+        parent directories as needed to reach the final destination path.
+        @param path: the local filesystem path to create the directory
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+
+    mklink(path StringUTF8, target StringUTF8) -> Void
+        @description: makes the specified symlink
+        @param path: The path of the symlink
+        @param target: The real path on the local filesystem
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform        
+        @error 3: target argument must be supplied
+        @error 4: target argument must be a StringUTF8
+        @error 5: target is invalid for this platform
+        @error 6: target does not exist
+
+    open(path StringUTF8) -> reference<core.FileHandle>
+        @description: open returns a new file handle for the given path
+        @param path: the local filesystem path to the file
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist    
+
+    read(path StringUTF8) -> Bytes
+        @description: reads the whole file as a stream of bytes. The encoding of 
+        bytes is unknown. It is the responsibility of the consumer to determine 
+        the type of encoding used in the returned data.
+        @param path: the local filesystem path to the file
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+
+    readln(path StringUTF8) -> chunk<Bytes>
+        @description: reads the whole file as a stream of bytes. The encoding of 
+        bytes is unknown. It is the responsibility of the consumer to determine 
+        the type of encoding used in the returned data. The stream is treated as 
+        each chunk containing one line. you must have direct control of stream 
+        chunking. If you do not have control over stream chunking use read instead 
+        and split data on detected newlines
+        @param path: the local filesystem path to the file
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+
+    tail(path StringUTF8, start Int32=1, follow Bool=false) -> chunk<Bytes>
+        @description: Used to display lines from the end of a file (tail). The 
+        path must be a file not a directory. The behavior of the byte stream is 
+        to supply each line as a single chunk, no matter the total byte size of the
+        line observed. You must have direct control of stream chunking to read 
+        individual chunks containing each new line.
+        @param path: the local filesystem path to the file
+        @param start: Where to start tailing from within the file. A positive Int32
+        indicates starting from the top n lines in the file, while a negative Int32
+        indicates starting from the bottom n lines in the file.
+        @param follow: Continuously monitor the file for additional lines. If set
+        to true, the tail and stream will remain active until the consumer closes
+        the hub connection
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+        @error 4: start argument must be supplied
+        @error 5: start argument must be a Int32
+        @error 6: follow argument must be a Boolean         
+
+    watch(path StringUTF8) -> reference<core.FileWatcher>
+        @description: creates a new FileWatcher resources
+        @param path: the local filesystem path to watch
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist
+    
+    write(path StringUTF8, append Bool=false) <- Bytes
+        @description: writes bytes to the file specified by path
+        @param path: the local filesystem path to the file
+        @param append: indicate if we wish to append our writes to the end of the file.
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist      
+
+    writeln(path StringUTF8, append Bool=false) <- chunk<Bytes>
+        @description: writes a stream of bytes to a line in the file specified by 
+        path. each chunk in the stream is treated as a new line to write to the 
+        end of the file. To write multiple lines in one call you must have direct
+        control of stream chunking. If you do not have control over stream chunking
+        use write instead and append newlines for each line you require.
+        @param path: the local filesystem path to the file
+        @param append: indicate if we wish to append our writes to the end of the file.
+        @status 0: success
+        @status 1: failure        
+        @error 0: path argument must be supplied
+        @error 1: path argument must be a StringUTF8
+        @error 2: path is invalid for this platform
+        @error 3: path does not exist

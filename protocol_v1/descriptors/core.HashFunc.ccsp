@@ -1,0 +1,17 @@
+enum core.HashFunc int32
+    @description: describes available hash functions
+
+    SHA1 = 0
+    SHA3 = 1
+    SHA224 = 2
+    SHA256 = 3
+    SHA384 = 4
+    SHA512 = 5
+    SHA512_224 = 6
+    SHA512_256 = 7    
+    CRC16 = 30
+    CRC32 = 31
+    CRC64 = 32
+    MD5 = 50
+    RIPEMD160 = 70
+
