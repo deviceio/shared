@@ -1,8 +1,0 @@
-resource core.Process
-    @static
-    @description: Provides access to system process resources and actions
-
-    create(path StringUTF8, args []StringUTF8) -> reference<core.ProcessHandle>
-        @description: Creates a new process from path and returns a handle to the process
-        @param path: The path to the executable file you wish to create a process from
-        @param args: An array of strings to pass as arguments to the process    

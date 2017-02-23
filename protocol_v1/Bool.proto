@@ -1,6 +1,0 @@
-syntax = "proto3";
-package protocol.v1;
-
-message Bool {
-    bool Value = 1;
-}

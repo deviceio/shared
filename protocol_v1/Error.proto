@@ -1,7 +1,0 @@
-syntax = "proto3";
-package protocol.v1;
-
-message Error {    
-    string Message = 1;
-    int64 Code = 2;
-}
