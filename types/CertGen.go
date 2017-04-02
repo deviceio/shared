@@ -73,26 +73,34 @@ func (t *CertGen) pemBlockForKey(priv interface{}) *pem.Block {
 func (t *CertGen) Generate() (cert []byte, key []byte) {
 	var priv interface{}
 	var err error
+
 	switch t.EcdsaCurve {
 	case "":
 		priv, err = rsa.GenerateKey(rand.Reader, t.RsaBits)
+
 	case "P224":
 		priv, err = ecdsa.GenerateKey(elliptic.P224(), rand.Reader)
+
 	case "P256":
 		priv, err = ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+
 	case "P384":
 		priv, err = ecdsa.GenerateKey(elliptic.P384(), rand.Reader)
+
 	case "P521":
 		priv, err = ecdsa.GenerateKey(elliptic.P521(), rand.Reader)
+
 	default:
 		fmt.Fprintf(os.Stderr, "Unrecognized elliptic curve: %q", t.EcdsaCurve)
 		os.Exit(1)
 	}
+
 	if err != nil {
 		log.Fatalf("failed to generate private key: %s", err)
 	}
 
 	var notBefore time.Time
+
 	if len(t.ValidFrom) == 0 {
 		notBefore = time.Now()
 	} else {
@@ -104,9 +112,9 @@ func (t *CertGen) Generate() (cert []byte, key []byte) {
 	}
 
 	notAfter := notBefore.Add(t.ValidFor)
-
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
 	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
+
 	if err != nil {
 		log.Fatalf("failed to generate serial number: %s", err)
 	}
@@ -125,6 +133,7 @@ func (t *CertGen) Generate() (cert []byte, key []byte) {
 	}
 
 	hosts := strings.Split(t.Host, ",")
+
 	for _, h := range hosts {
 		if ip := net.ParseIP(h); ip != nil {
 			template.IPAddresses = append(template.IPAddresses, ip)
@@ -139,24 +148,16 @@ func (t *CertGen) Generate() (cert []byte, key []byte) {
 	}
 
 	derBytes, err := x509.CreateCertificate(rand.Reader, &template, &template, t.publicKey(priv), priv)
+
 	if err != nil {
 		log.Fatalf("Failed to create certificate: %s", err)
 	}
 
 	certOut := bytes.NewBuffer([]byte(""))
-	if err != nil {
-		log.Fatalf("failed to open cert.pem for writing: %s", err)
-	}
-	pem.Encode(certOut, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes})
-	log.Print("written cert.pem\n")
-
 	keyOut := bytes.NewBuffer([]byte(""))
-	if err != nil {
-		log.Print("failed to open key.pem for writing:", err)
-		return
-	}
+
+	pem.Encode(certOut, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes})
 	pem.Encode(keyOut, t.pemBlockForKey(priv))
-	log.Print("written key.pem\n")
 
 	return certOut.Bytes(), keyOut.Bytes()
 }
